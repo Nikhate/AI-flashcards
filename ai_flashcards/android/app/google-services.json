@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1017148209250",
+    "project_id": "ai-flashcards-eea54",
+    "storage_bucket": "ai-flashcards-eea54.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1017148209250:android:3a52a1b054208f87d8793b",
+        "android_client_info": {
+          "package_name": "com.example.ai_flashcards"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKti3Cm2mwRkQujyc-uTPbty-cb1-9GUo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

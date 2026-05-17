@@ -9,6 +9,7 @@ import '../providers/home_provider.dart';
 import '../services/gemini_service.dart';
 import '../services/file_service.dart';
 import '../services/storage_service.dart';
+import '../services/auth_service.dart';
 import '../theme/app_theme.dart';
 import '../widgets/buttons.dart';
 import '../widgets/flashcard_tile.dart';
@@ -202,15 +203,16 @@ class _HomeScreenState extends State<HomeScreen> {
         child: ListView(
           padding: EdgeInsets.only(bottom: isLandscape ? 20 : 40),
           children: [
-            _Header(onSavedSets: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SavedSetsScreen()))),
+            _Header(
+              onSavedSets: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SavedSetsScreen())),
+              onLogout: () async => await AuthService.logout(),
+            ),
             SizedBox(height: isLandscape ? 12 : 24),
 
-            // In landscape: side by side layout
             isLandscape
                 ? Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      // Left column: upload + camera
                       SizedBox(
                         width: 200,
                         child: Column(children: [
@@ -220,7 +222,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         ]),
                       ),
                       const SizedBox(width: 16),
-                      // Right column: sliders + pickers
                       Expanded(child: Column(children: [
                         _CardCountPicker(value: p.cardCount, onChanged: p.setCardCount),
                         const SizedBox(height: 10),
@@ -260,7 +261,6 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 28),
               _CardsHeader(count: p.cards.length, onSave: () => _saveSet(p)),
               const SizedBox(height: 4),
-              // In landscape: 2-column grid for cards
               if (isLandscape)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -312,7 +312,7 @@ class _TwoColumnCards extends StatelessWidget {
   }
 }
 
-// ── Extracted stateless widgets ────────────────────────────────
+// ── Widgets ────────────────────────────────────────────────────
 
 class _CardCountPicker extends StatelessWidget {
   final int value;
@@ -483,7 +483,8 @@ class _ImageGrid extends StatelessWidget {
 
 class _Header extends StatelessWidget {
   final VoidCallback onSavedSets;
-  const _Header({required this.onSavedSets});
+  final VoidCallback onLogout;
+  const _Header({required this.onSavedSets, required this.onLogout});
 
   @override
   Widget build(BuildContext context) {
@@ -491,25 +492,37 @@ class _Header extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
       child: Row(children: [
         ClipRRect(
-        borderRadius: BorderRadius.circular(13),
-        child: Image.asset('assets/icon/icon.png', width: 42, height: 42, fit: BoxFit.cover),),
+          borderRadius: BorderRadius.circular(13),
+          child: Image.asset('assets/icon/icon.png', width: 42, height: 42, fit: BoxFit.cover),
+        ),
         const SizedBox(width: 12),
         const Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text('FlashAI', style: TextStyle(fontSize: 19, fontWeight: FontWeight.w800, color: Colors.white)),
           Text('Study smarter with AI', style: TextStyle(fontSize: 11, color: AppColors.muted)),
         ]),
         const Spacer(),
-        GestureDetector(
-          onTap: onSavedSets,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: BoxDecoration(color: AppColors.cardBg, borderRadius: BorderRadius.circular(10), border: Border.all(color: AppColors.cardBorder)),
-            child: const Row(children: [
-              Text('📚', style: TextStyle(fontSize: 16)), SizedBox(width: 6),
-              Text('Saved', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white)),
-            ]),
+        Row(children: [
+          GestureDetector(
+            onTap: onSavedSets,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(color: AppColors.cardBg, borderRadius: BorderRadius.circular(10), border: Border.all(color: AppColors.cardBorder)),
+              child: const Row(children: [
+                Text('📚', style: TextStyle(fontSize: 16)), SizedBox(width: 6),
+                Text('Saved', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white)),
+              ]),
+            ),
           ),
-        ),
+          const SizedBox(width: 8),
+          GestureDetector(
+            onTap: onLogout,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(color: AppColors.cardBg, borderRadius: BorderRadius.circular(10), border: Border.all(color: AppColors.cardBorder)),
+              child: const Text('🚪', style: TextStyle(fontSize: 16)),
+            ),
+          ),
+        ]),
       ]),
     );
   }
