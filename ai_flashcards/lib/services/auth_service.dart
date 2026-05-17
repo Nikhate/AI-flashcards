@@ -29,4 +29,13 @@ class AuthService {
   static Future<void> logout() async {
     await _auth.signOut();
   }
+
+  static Future<String?> changePassword(String newPassword) async {
+  try {
+    await _auth.currentUser?.updatePassword(newPassword);
+    return null; // success
+  } on FirebaseAuthException catch (e) {
+    return e.message;
+  }
+}
 }

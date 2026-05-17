@@ -9,12 +9,12 @@ import '../providers/home_provider.dart';
 import '../services/gemini_service.dart';
 import '../services/file_service.dart';
 import '../services/storage_service.dart';
-import '../services/auth_service.dart';
 import '../theme/app_theme.dart';
 import '../widgets/buttons.dart';
 import '../widgets/flashcard_tile.dart';
 import 'study_screen.dart';
 import 'saved_sets_screen.dart';
+import 'account_screen.dart';
 
 const _languages = [
   ('English', '🇬🇧'), ('Slovak', '🇸🇰'), ('Czech', '🇨🇿'),
@@ -205,7 +205,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             _Header(
               onSavedSets: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SavedSetsScreen())),
-              onLogout: () async => await AuthService.logout(),
+              onAccount: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AccountScreen())),
             ),
             SizedBox(height: isLandscape ? 12 : 24),
 
@@ -483,8 +483,8 @@ class _ImageGrid extends StatelessWidget {
 
 class _Header extends StatelessWidget {
   final VoidCallback onSavedSets;
-  final VoidCallback onLogout;
-  const _Header({required this.onSavedSets, required this.onLogout});
+  final VoidCallback onAccount;
+  const _Header({required this.onSavedSets, required this.onAccount});
 
   @override
   Widget build(BuildContext context) {
@@ -515,11 +515,14 @@ class _Header extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           GestureDetector(
-            onTap: onLogout,
+            onTap: onAccount,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(color: AppColors.cardBg, borderRadius: BorderRadius.circular(10), border: Border.all(color: AppColors.cardBorder)),
-              child: const Text('🚪', style: TextStyle(fontSize: 16)),
+              child: const Row(children: [
+                Text('👤', style: TextStyle(fontSize: 16)), SizedBox(width: 6),
+                Text('Account', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.white)),
+              ]),
             ),
           ),
         ]),
