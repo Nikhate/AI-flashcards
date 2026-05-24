@@ -215,4 +215,4 @@ Klikni na "👤 Account" pre zmenu hesla alebo odhlásenie.
 --- 
 ## Autor
 
-Radovan — študentský projekt pre predmet softvérové inžinierstvo, 2025/2026
+Radovan Šašala
